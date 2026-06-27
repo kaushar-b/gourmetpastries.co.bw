@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAM Group Restaurant</title>
+  <meta name="description" content="TAM Group Restaurant – Coming Soon. Mowana Park Mall, Phakalane, Botswana." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:   #ffffff;
+      --off:     #fff9e6;
+      --cream:   #FF4164;
+      --gold:    #FFE14C;
+      --gold-lt: #ffea7a;
+      --dark:    #1a1612;
+      --mid:     #5c5248;
+      --radius:  4px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Jost', sans-serif;
+      background: #FFA78B;
+      color: var(--dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FFA78B, #FFA78B, #FFA78B);
+      z-index: 100;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 24px 60px;
+      text-align: center;
+      gap: 0;
+    }
+
+    /* ============================================================
+       LOGO SECTION
+       Replace "white.logo.png" with your actual logo filename.
+       The logo displays as a large circle (240px desktop, 180px mobile).
+       Just drop your image file in the same folder as this HTML file
+       and update the src attribute below if the filename is different.
+       ============================================================ */
+    .logo-wrap {
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+    }
+
+    .logo-wrap img {
+      width: 260px;
+      height: 260px;
+      border-radius: 16px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 auto 28px;
+      width: min(320px, 80vw);
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: #FFE14C;
+    }
+
+    .divider-diamond {
+      width: 6px;
+      height: 6px;
+      background: #D7000F;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .headline-block {
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.45s forwards;
+      margin-bottom: 12px;
+    }
+
+    .headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      line-height: 1.1;
+      color: var(--dark);
+      letter-spacing: 0.02em;
+    }
+
+    .headline em {
+      font-style: italic;
+      color: #ffffff;
+    }
+
+    .subline {
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-top: 16px;
+    }
+
+    .location-card {
+      background: #FFA78B;
+      border: none;
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s forwards;
+    }
+
+    .location-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      white-space: nowrap;
+    }
+
+    .location-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 4.5vw, 2.1rem);
+      font-weight: 600;
+      font-style: normal;
+      color: var(--dark);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .location-country {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      letter-spacing: 0.3em;
+      color: black;
+      margin-top: 8px;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .square-img-wrap {
+      margin-top: 18px;
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
+    }
+
+    /* ============================================================
+       SQUARE FEATURE IMAGE
+       Replace "pink.img.png" with your actual image filename.
+       ============================================================ */
+    .square-img-wrap img {
+      width: min(300px, 82vw);
+      height: min(300px, 82vw);
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      display: block;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #aaa;
+      background: transparent;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       MOBILE STYLES
+       Logo shrinks to 180px on small screens but stays big and round.
+       ============================================================ */
+    @media (max-width: 480px) {
+      .page { padding: 70px 12px 60px; }
+
+      .logo-wrap img {
+        width: 200px;
+        height: 200px;
+        border-radius: 16px;
+      }
+
+      .location-card { padding: 14px 16px; }
+      .location-main { font-size: clamp(0.85rem, 4vw, 1.1rem); letter-spacing: 0.04em; }
+      .location-country { font-size: clamp(0.95rem, 4vw, 1.2rem); letter-spacing: 0.15em; }
+      .location-row { gap: 6px; }
+      .location-row svg { width: 14px !important; height: 18px !important; }
+      .headline { font-size: clamp(1.4rem, 6vw, 2rem); }
+      .subline { font-size: clamp(0.75rem, 3.5vw, 1rem); letter-spacing: 0.15em; }
+      .divider { margin-bottom: 18px; }
+      .headline-block { margin-bottom: 18px; }
+      .logo-wrap { margin-bottom: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar"></div>
+
+  <div class="page">
+
+    <!-- ============================================================
+         YOUR LOGO GOES HERE
+         File: white.logo.png (in the same folder as this index.html)
+         If you rename the file, update the src="" value below.
+         ============================================================ -->
+    <div class="logo-wrap">
+      <img src="pink icon-.jpeg" alt="TAM Group Logo" />
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="headline-block">
+      <div class="headline">Something <em>exceptional</em><br>is being prepared.</div>
+      <div class="subline">Website Under Construction</div>
+    </div>
+
+    <div class="location-card">
+      <div class="location-row">
+        <svg width="26" height="34" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:2px">
+          <path d="M11 0C4.925 0 0 4.925 0 11c0 8.25 11 17 11 17s11-8.75 11-17C22 4.925 17.075 0 11 0Zm0 15a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z" fill="#D7000F"/>
+        </svg>
+        <div class="location-main">MOWANA PARK MALL, PHAKALANE</div>
+      </div>
+      <div class="location-country">BOTSWANA</div>
+    </div>
+
+    <!-- ============================================================
+         SQUARE FEATURE IMAGE
+         File: pink.img.png (in the same folder as this index.html)
+         If you rename the file, update the src="" value below.
+         ============================================================ -->
+
+  </div>
+
+  <footer>© 2026 tamgroup-restaurant.co.bw</footer>
+
+</body>
+</html>
