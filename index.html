@@ -3,289 +3,244 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TAM Group Restaurant</title>
-  <meta name="description" content="TAM Group Restaurant – Coming Soon. Mowana Park Mall, Phakalane, Botswana." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>Gourmet Fine Pastries — Custom Cakes &amp; Fresh Pastries</title>
+  <meta name="description" content="Gourmet Fine Pastries — custom celebration cakes, fresh daily pastries, and bakes for every occasion. Birthdays, weddings, parties and corporate events, made with the finest ingredients." />
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --white:   #ffffff;
-      --off:     #fff9e6;
-      --cream:   #FF4164;
-      --gold:    #FFE14C;
-      --gold-lt: #ffea7a;
-      --dark:    #1a1612;
-      --mid:     #5c5248;
-      --radius:  4px;
-    }
-
-    html, body {
-      height: 100%;
-      font-family: 'Jost', sans-serif;
-      background: #FDA2C6;
-      color: var(--dark);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .top-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #FDA2C6, #FDA2C6, #FDA2C6);
-      z-index: 100;
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 70px 24px 60px;
-      text-align: center;
-      gap: 0;
-    }
-
-    /* ============================================================
-       LOGO SECTION
-       Replace "white.logo.png" with your actual logo filename.
-       The logo displays as a large circle (240px desktop, 180px mobile).
-       Just drop your image file in the same folder as this HTML file
-       and update the src attribute below if the filename is different.
-       ============================================================ */
-    .logo-wrap {
-      margin-bottom: 28px;
-      opacity: 0;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
-    }
-
-    .logo-wrap img {
-      width: 260px;
-      height: 260px;
-      border-radius: 16px;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 0 auto 28px;
-      width: min(320px, 80vw);
-      opacity: 0;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
-    }
-
-    .divider-line {
-      flex: 1;
-      height: 1px;
-      background: #FFE14C;
-    }
-
-    .divider-diamond {
-      width: 6px;
-      height: 6px;
-      background: #D7000F;
-      transform: rotate(45deg);
-      flex-shrink: 0;
-    }
-
-    .headline-block {
-      opacity: 0;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.45s forwards;
-      margin-bottom: 12px;
-    }
-
-    .headline {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 600;
-      font-size: clamp(1.8rem, 4.5vw, 3rem);
-      line-height: 1.1;
-      color: var(--dark);
-      letter-spacing: 0.02em;
-    }
-
-    .headline em {
-      font-style: italic;
-      color: #ffffff;
-    }
-
-    .subline {
-      font-family: 'Jost', sans-serif;
-      font-weight: 500;
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--dark);
-      margin-top: 16px;
-    }
-
-    .location-card {
-      background: #FDA2C6;
-      border: none;
-      border-radius: var(--radius);
-      padding: 20px 28px;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-      opacity: 0;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s forwards;
-    }
-
-    .location-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      white-space: nowrap;
-    }
-
-    .location-main {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.4rem, 4.5vw, 2.1rem);
-      font-weight: 600;
-      font-style: normal;
-      color: var(--dark);
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-      text-transform: uppercase;
-    }
-
-    .location-country {
-      font-family: 'Jost', sans-serif;
-      font-size: clamp(1.1rem, 3vw, 1.6rem);
-      letter-spacing: 0.3em;
-      color: black;
-      margin-top: 8px;
-      font-weight: 700;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .square-img-wrap {
-      margin-top: 18px;
-      opacity: 0;
-      animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
-    }
-
-    /* ============================================================
-       SQUARE FEATURE IMAGE
-       Replace "pink.img.png" with your actual image filename.
-       ============================================================ */
-    .square-img-wrap img {
-      width: min(300px, 82vw);
-      height: min(300px, 82vw);
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      display: block;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      padding: 14px 24px;
-      text-align: center;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #aaa;
-      background: transparent;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ============================================================
-       MOBILE STYLES
-       Logo shrinks to 180px on small screens but stays big and round.
-       ============================================================ */
-    @media (max-width: 480px) {
-      .page { padding: 70px 12px 60px; }
-
-      .logo-wrap img {
-        width: 200px;
-        height: 200px;
-        border-radius: 16px;
-      }
-
-      .location-card { padding: 14px 16px; }
-      .location-main { font-size: clamp(0.85rem, 4vw, 1.1rem); letter-spacing: 0.04em; }
-      .location-country { font-size: clamp(0.95rem, 4vw, 1.2rem); letter-spacing: 0.15em; }
-      .location-row { gap: 6px; }
-      .location-row svg { width: 14px !important; height: 18px !important; }
-      .headline { font-size: clamp(1.4rem, 6vw, 2rem); }
-      .subline { font-size: clamp(0.75rem, 3.5vw, 1rem); letter-spacing: 0.15em; }
-      .divider { margin-bottom: 18px; }
-      .headline-block { margin-bottom: 18px; }
-      .logo-wrap { margin-bottom: 18px; }
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
 </head>
-<body>
+<body id="top">
 
-  <div class="top-bar"></div>
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Gourmet Fine Pastries home">
+        <img src="images/logo.png" alt="Gourmet Fine Pastries cake emblem" />
+        <span class="brand-name">Gourmet <b>Fine Pastries</b></span>
+      </a>
 
-  <div class="page">
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="#top">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#find-us">Contact</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a class="btn-order" href="#app">Order Online</a>
+      </nav>
 
-    <!-- ============================================================
-         YOUR LOGO GOES HERE
-         File: white.logo.png (in the same folder as this index.html)
-         If you rename the file, update the src="" value below.
-         ============================================================ -->
-    <div class="logo-wrap">
-      <img src="pink icon-.jpeg" alt="TAM Group Logo" />
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </header>
 
-    <div class="divider">
-      <div class="divider-line"></div>
-      <div class="divider-diamond"></div>
-      <div class="divider-line"></div>
+  <!-- ================= SLIDE-OUT MENU ================= -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <a href="#top"><i class="fa-solid fa-house"></i> Home</a>
+    <hr>
+    <a href="#about"><i class="fa-solid fa-cake-candles"></i> About Us</a>
+    <hr>
+    <a href="#find-us"><i class="fa-solid fa-location-dot"></i> Contact</a>
+    <div class="mm-contact">
+      <div><i class="fa-solid fa-phone"></i> +267 0000 0000</div>
+      <div><i class="fa-solid fa-envelope"></i> gourmetpastries.bw@gmail.com</div>
     </div>
+    <hr>
+    <a href="terms.html"><i class="fa-solid fa-file-contract"></i> Terms of Service</a>
+    <hr>
+    <a href="privacy.html"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+  </nav>
 
-    <div class="headline-block">
-      <div class="headline">Something <em>exceptional</em><br>is being prepared.</div>
-      <div class="subline">Website Under Construction</div>
-    </div>
-
-    <div class="location-card">
-      <div class="location-row">
-        <svg width="26" height="34" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-top:2px">
-          <path d="M11 0C4.925 0 0 4.925 0 11c0 8.25 11 17 11 17s11-8.75 11-17C22 4.925 17.075 0 11 0Zm0 15a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z" fill="#D7000F"/>
-        </svg>
-        <div class="location-main">MOWANA PARK MALL, PHAKALANE</div>
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <img class="hero-img" src="images/hero.jpg" alt="Custom celebration cakes by Gourmet Fine Pastries" />
+    <div class="hero-content">
+      <span class="eyebrow">Welcome to Gourmet Fine Pastries</span>
+      <h1>Celebration <span class="em">Cakes</span> &amp; Fine Pastries</h1>
+      <p>Custom cakes, fresh daily pastries, and bakes for every occasion — made to order with the finest ingredients.</p>
+      <div class="cta-row">
+        <a class="btn btn-accent" href="#app"><i class="fa-solid fa-mobile-screen"></i> Order Online</a>
+        <a class="btn btn-ghost" href="#about">Our Story</a>
       </div>
-      <div class="location-country">BOTSWANA</div>
     </div>
+    <a class="scroll-cue" href="#about" aria-label="Scroll down"><i class="fa-solid fa-chevron-down fa-lg"></i></a>
+  </section>
 
-    <!-- ============================================================
-         SQUARE FEATURE IMAGE
-         File: pink.img.png (in the same folder as this index.html)
-         If you rename the file, update the src="" value below.
-         ============================================================ -->
+  <!-- ================= ABOUT US ================= -->
+  <section class="section about" id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="pearl-divider"><span class="rule"></span><span class="pearl sm"></span><span class="pearl"></span><span class="pearl sm"></span><span class="rule right"></span></div>
+        <span class="eyebrow">About Us</span>
+        <h2>Baked Fresh, Made to Celebrate</h2>
+      </div>
 
+      <div class="about-grid reveal">
+        <p>Welcome to <strong>Gourmet Fine Pastries</strong>. We specialise in custom celebration cakes, fresh daily pastries, and bakes for every occasion — from birthdays and weddings to parties and corporate events.</p>
+
+        <ul class="about-list">
+          <li>Custom celebration cakes designed around your event — birthdays, weddings, parties and corporate occasions.</li>
+          <li>Fresh pastries baked daily, from morning treats to afternoon indulgences.</li>
+          <li>Every order is made to order with the finest ingredients — never mass-produced.</li>
+          <li>Order in our app for pickup or delivery, with a simple 50% deposit to confirm your cake.</li>
+        </ul>
+
+        <blockquote class="pull-quote">
+          Every order is made with the finest ingredients — because every celebration deserves something special.
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GALLERY / SLIDESHOW ================= -->
+  <section class="section gallery">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="pearl-divider"><span class="rule"></span><span class="pearl sm"></span><span class="pearl"></span><span class="pearl sm"></span><span class="rule right"></span></div>
+        <span class="eyebrow">From Our Bakery</span>
+        <h2>Made for Every Occasion</h2>
+      </div>
+
+      <div class="reveal">
+        <div class="slideshow" aria-roledescription="carousel" aria-label="Cakes and pastries by Gourmet Fine Pastries">
+          <div class="slides">
+            <div class="slide active"><img src="images/slide1.jpg" alt="Custom celebration cakes"><div class="slide-cap">Custom Celebration Cakes</div></div>
+            <div class="slide"><img src="images/slide2.jpg" alt="Wedding cakes"><div class="slide-cap">Wedding Cakes</div></div>
+            <div class="slide"><img src="images/slide3.jpg" alt="Fresh daily pastries"><div class="slide-cap">Fresh Daily Pastries</div></div>
+            <div class="slide"><img src="images/slide4.jpg" alt="Corporate and event bakes"><div class="slide-cap">Corporate &amp; Events</div></div>
+          </div>
+          <button class="slide-arrow prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="slide-arrow next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="dots" role="tablist" aria-label="Slide navigation"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOLLOW US ================= -->
+  <section class="section social">
+    <div class="wrap reveal">
+      <span class="eyebrow">Stay Sweet</span>
+      <h2>Follow Us</h2>
+      <p>New cakes, fresh bakes and a little daily inspiration for your next celebration.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Facebook" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="#" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= APP DOWNLOAD ================= -->
+  <section class="section appdl" id="app">
+    <div class="wrap inner reveal">
+      <div class="copy">
+        <span class="eyebrow">Gourmet Fine Pastries App</span>
+        <h2>Download Our App</h2>
+        <p>Start ordering online! Build your custom cake, browse fresh pastries, and place pickup or delivery orders right from your phone.</p>
+        <div class="store-row">
+          <a class="store-btn" href="#" aria-label="Download on Google Play">
+            <i class="fa-brands fa-google-play"></i>
+            <span class="st"><small>Get it on</small><b>Google Play</b></span>
+          </a>
+          <a class="store-btn" href="#" aria-label="Download on the App Store">
+            <i class="fa-brands fa-apple"></i>
+            <span class="st"><small>Download on the</small><b>App Store</b></span>
+          </a>
+        </div>
+      </div>
+      <div class="app-emblem"><img src="images/logo.png" alt="Gourmet Fine Pastries app icon"></div>
+    </div>
+  </section>
+
+  <!-- ================= FIND US ================= -->
+  <section class="section findus" id="find-us">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="pearl-divider"><span class="rule"></span><span class="pearl sm"></span><span class="pearl"></span><span class="pearl sm"></span><span class="rule right"></span></div>
+        <span class="eyebrow">Visit Us</span>
+        <h2>Find Us</h2>
+      </div>
+
+      <div class="findus-grid reveal">
+        <div class="map-card">
+          <!-- Replace this <img> with a Google Maps embed iframe when ready:
+               <iframe src="https://www.google.com/maps/embed?pb=YOUR_EMBED" loading="lazy"></iframe> -->
+          <img src="images/map.jpg" alt="Map showing Gourmet Fine Pastries location">
+        </div>
+
+        <div class="info-card">
+          <div class="info-row">
+            <span class="ic"><i class="fa-solid fa-location-dot"></i></span>
+            <div>
+              <h4>Location</h4>
+              <p>Mowana Park Mall, Phakalane<br>Gaborone, Botswana</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-regular fa-clock"></i></span>
+            <div style="flex:1">
+              <h4>Opening Hours</h4>
+              <p class="hours-line"><span>Monday – Sunday</span><span>07:00 – 22:00</span></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-solid fa-phone"></i></span>
+            <div>
+              <h4>Phone</h4>
+              <p><a href="tel:+2670000000">+267 0000 0000</a></p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="ic"><i class="fa-solid fa-envelope"></i></span>
+            <div>
+              <h4>Email</h4>
+              <p><a href="mailto:gourmetpastries.bw@gmail.com">gourmetpastries.bw@gmail.com</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THIN FOOTER (white) ================= -->
+  <div class="footer-thin">
+    <img src="images/tam-logo.png" alt="TAM Group logo">
+    <span><b>TAM Group</b> Company</span>
   </div>
 
-  <footer>© 2026 tamgroup-restaurant.co.bw</footer>
+  <!-- ================= MAIN FOOTER ================= -->
+  <footer class="footer-main">
+    <div class="wrap">
+      <img class="f-logo" src="images/logo-light.png" alt="Gourmet Fine Pastries">
+      <p class="footer-tag">"Every order is made with the finest ingredients — because every celebration deserves something special."</p>
 
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#top">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#find-us">Contact</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </nav>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+
+      <div class="footer-base">
+        © <span id="year"></span> Gourmet Fine Pastries · A TAM Group Company. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="script.js"></script>
 </body>
 </html>
