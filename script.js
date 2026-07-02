@@ -26,6 +26,13 @@ document.addEventListener("DOMContentLoaded", () => {
   toggle?.addEventListener("click", () => {
     menu?.classList.contains("open") ? closeMenu() : openMenu();
   });
+   /* ---------- Mobile menu: Back button + Contact accordion ---------- */
+  document.querySelector(".mm-close")?.addEventListener("click", closeMenu);
+  const contactToggle = document.querySelector(".mm-contact-toggle");
+  contactToggle?.addEventListener("click", () => {
+    const isOpen = contactToggle.classList.toggle("open");
+    contactToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
   overlay?.addEventListener("click", closeMenu);
   menu?.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenu(); });
