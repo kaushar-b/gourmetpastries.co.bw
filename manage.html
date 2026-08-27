@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Manage Reviews — Gourmet Fine Pastries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@600&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{ --pink:#FDA8BF; --pink-deep:#B84A6C; --pink-soft:#FDC3D1; --pink-wash:#FFF3F6; --ink:#4A2531; --ink-soft:#86596a; --line:#f0d9e1; --ease:cubic-bezier(.22,.61,.36,1); }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:"Mulish",sans-serif; background:var(--pink-wash); color:var(--ink); }
+    .bar{ background:var(--pink-deep); color:#fff; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; }
+    .bar h1{ font-family:"Cormorant",serif; font-weight:600; font-size:1.25rem; margin:0; }
+    .bar button{ background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.35); padding:8px 14px; border-radius:10px; cursor:pointer; font:inherit; font-weight:700; }
+    .wrap{ width:min(760px,92%); margin:40px auto; }
+    .login{ max-width:380px; margin:8vh auto; background:#fff; border-radius:16px; box-shadow:0 18px 50px rgba(110,34,56,.14); padding:32px; }
+    .login h2{ font-family:"Cormorant",serif; color:var(--pink-deep); margin:0 0 18px; }
+    .login input{ width:100%; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font:inherit; margin-bottom:12px; background:var(--pink-wash); }
+    .login button{ width:100%; background:var(--pink-deep); color:#fff; border:0; border-radius:999px; padding:13px; font:inherit; font-weight:800; cursor:pointer; }
+    .err{ color:var(--pink-deep); font-weight:700; margin:6px 0 0; min-height:1.2em; font-size:.9rem; }
+    .rev{ background:#fff; border-radius:14px; box-shadow:0 8px 24px rgba(110,34,56,.08); padding:20px 22px; margin-bottom:14px; }
+    .rev .top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .rev .name{ font-weight:800; color:var(--pink-deep); }
+    .rev .stars{ color:var(--pink-deep); letter-spacing:1px; }
+    .rev .text{ margin:8px 0 0; color:var(--ink-soft); line-height:1.6; }
+    .rev .date{ font-size:.78rem; color:#b08ea0; margin-top:8px; }
+    .menu{ position:relative; }
+    .dots{ background:none; border:0; cursor:pointer; font-size:1.2rem; color:var(--ink-soft); padding:4px 10px; border-radius:8px; }
+    .dots:hover{ background:var(--pink-wash); }
+    .pop{ position:absolute; right:0; top:34px; background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.14); overflow:hidden; display:none; z-index:5; }
+    .pop.open{ display:block; }
+    .pop button{ display:flex; align-items:center; gap:8px; width:100%; background:none; border:0; padding:11px 16px; cursor:pointer; font:inherit; color:var(--pink-deep); font-weight:700; white-space:nowrap; }
+    .pop button:hover{ background:#fdecf1; }
+    .empty{ text-align:center; color:var(--ink-soft); padding:40px; }
+  </style>
+</head>
+<body>
+  <div id="loginView" class="login">
+    <h2>Manage Reviews</h2>
+    <input type="email" id="email" placeholder="Admin email" autocomplete="username">
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+    <button id="loginBtn">Sign in</button>
+    <p class="err" id="loginErr"></p>
+  </div>
+
+  <div id="adminView" style="display:none">
+    <div class="bar">
+      <h1>Gourmet Fine Pastries · Reviews</h1>
+      <button id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
+    </div>
+    <div class="wrap" id="list"><p class="empty">Loading…</p></div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import { signInWithEmailAndPassword, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { collection, getDocs, deleteDoc, doc }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const loginView=document.getElementById("loginView");
+    const adminView=document.getElementById("adminView");
+    const list=document.getElementById("list");
+    const esc=s=>(s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const starStr=n=>"★".repeat(n)+"☆".repeat(5-n);
+
+    document.getElementById("loginBtn").addEventListener("click", async ()=>{
+      const err=document.getElementById("loginErr"); err.textContent="";
+      try{ await signInWithEmailAndPassword(auth,
+        document.getElementById("email").value.trim(),
+        document.getElementById("password").value); }
+      catch(e){ err.textContent="Wrong email or password."; }
+    });
+    document.getElementById("password").addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("loginBtn").click(); });
+    document.getElementById("logoutBtn").addEventListener("click",()=>signOut(auth));
+
+    onAuthStateChanged(auth, user=>{
+      if(user){ loginView.style.display="none"; adminView.style.display="block"; loadReviews(); }
+      else { loginView.style.display="block"; adminView.style.display="none"; }
+    });
+
+    async function loadReviews(){
+      list.innerHTML=`<p class="empty">Loading…</p>`;
+      let docs=[];
+      try{
+        const snap=await getDocs(collection(db,"reviews"));
+        snap.forEach(d=>docs.push({id:d.id, ...d.data()}));
+      }catch(e){ list.innerHTML=`<p class="empty">Could not load reviews: ${esc(e.message)}</p>`; return; }
+      docs.sort((a,b)=>(b.created?.seconds||0)-(a.created?.seconds||0));
+      if(!docs.length){ list.innerHTML=`<p class="empty">No reviews yet.</p>`; return; }
+      list.innerHTML="";
+      docs.forEach(r=>{
+        const when = r.created?.toDate ? r.created.toDate().toLocaleString() : "";
+        const el=document.createElement("div"); el.className="rev";
+        el.innerHTML=`<div class="top">
+            <div><span class="name">${esc(r.name)}</span> &nbsp; <span class="stars">${starStr(r.stars||0)}</span></div>
+            <div class="menu">
+              <button class="dots" aria-label="Options">⋯</button>
+              <div class="pop"><button class="del"><i class="fa-solid fa-trash"></i> Delete review</button></div>
+            </div>
+          </div>
+          <p class="text">${esc(r.text)}</p>
+          <div class="date">${when}</div>`;
+        const dots=el.querySelector(".dots"), pop=el.querySelector(".pop");
+        dots.addEventListener("click",e=>{ e.stopPropagation(); document.querySelectorAll(".pop.open").forEach(p=>{if(p!==pop)p.classList.remove("open");}); pop.classList.toggle("open"); });
+        el.querySelector(".del").addEventListener("click", async ()=>{
+          if(!confirm("Delete this review permanently?")) return;
+          try{ await deleteDoc(doc(db,"reviews",r.id)); loadReviews(); }
+          catch(e){ alert("Delete failed: "+e.message); }
+        });
+        list.appendChild(el);
+      });
+    }
+    document.addEventListener("click",()=>document.querySelectorAll(".pop.open").forEach(p=>p.classList.remove("open")));
+  </script>
+</body>
+</html>
