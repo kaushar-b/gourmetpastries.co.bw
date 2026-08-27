@@ -141,6 +141,139 @@
     </div>
   </section>
 
+    <!-- ================= REVIEWS ================= -->
+  <section class="section reviews" id="reviews">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="pearl-divider"><span class="rule"></span><span class="pearl sm"></span><span class="pearl"></span><span class="pearl sm"></span><span class="rule right"></span></div>
+        <span class="eyebrow">Kind Words</span>
+        <h2>What Our Customers Say</h2>
+      </div>
+      <div class="rv-summary reveal" id="rvSummary" hidden>
+        <div class="rv-avg" id="rvAvg">0.0</div>
+        <div>
+          <div class="rv-avg-stars" id="rvAvgStars"></div>
+          <div class="rv-count" id="rvCount">0 reviews</div>
+        </div>
+      </div>
+      <div class="rv-carousel reveal">
+        <div class="rv-viewport">
+          <div class="rv-track" id="rvTrack">
+            <div class="rv-empty" id="rvEmpty">Loading reviews…</div>
+          </div>
+        </div>
+        <button class="rv-arrow prev" id="rvPrev" aria-label="Previous review"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="rv-arrow next" id="rvNext" aria-label="Next review"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="rv-dots" id="rvDots"></div>
+      </div>
+      <div class="rv-form-wrap reveal">
+        <h3 class="rv-form-title">Leave a Review</h3>
+        <form id="rvForm" class="rv-form" novalidate>
+          <div class="rv-field">
+            <label for="rvName">Your name</label>
+            <input type="text" id="rvName" maxlength="60" placeholder="e.g. Naledi M." />
+          </div>
+          <div class="rv-field">
+            <label>Your rating</label>
+            <div class="rv-stars-input" id="rvStarsInput" role="radiogroup" aria-label="Rating">
+              <i class="fa-solid fa-star" data-v="1"></i>
+              <i class="fa-solid fa-star" data-v="2"></i>
+              <i class="fa-solid fa-star" data-v="3"></i>
+              <i class="fa-solid fa-star" data-v="4"></i>
+              <i class="fa-solid fa-star" data-v="5"></i>
+            </div>
+          </div>
+          <div class="rv-field">
+            <label for="rvText">Your review</label>
+            <textarea id="rvText" maxlength="1000" rows="4" placeholder="Tell us about your experience…"></textarea>
+          </div>
+          <button type="submit" class="btn btn-accent" id="rvSubmit"><i class="fa-solid fa-paper-plane"></i> Submit Review</button>
+          <p class="rv-msg" id="rvMsg" hidden></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { db } from "./firebase-config.js";
+    import { collection, addDoc, getDocs, query, orderBy, serverTimestamp }
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const $ = id => document.getElementById(id);
+    const esc = s => (s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const starStr = n => "★".repeat(n) + "☆".repeat(5-n);
+
+    const track=$("rvTrack"), dots=$("rvDots");
+    let idx=0, count=0, timer=null;
+    const goTo=n=>{ if(!count)return; idx=(n+count)%count; track.style.transform=`translateX(-${idx*100}%)`;
+      [...dots.children].forEach((d,i)=>d.classList.toggle("active",i===idx)); };
+    const next=()=>goTo(idx+1);
+    const stopAuto=()=>{ if(timer) clearInterval(timer); };
+    const startAuto=()=>{ stopAuto(); if(count>1) timer=setInterval(next,3500); };
+
+    async function load(){
+      let items=[];
+      try{ const snap=await getDocs(query(collection(db,"reviews"),orderBy("created","desc")));
+        snap.forEach(d=>items.push(d.data())); }
+      catch(e){ console.error("reviews load:",e); }
+      track.innerHTML=""; dots.innerHTML=""; count=items.length;
+      if(!count){ track.innerHTML=`<div class="rv-empty">Be the first to leave a review!</div>`; $("rvSummary").hidden=true; return; }
+      let total=0;
+      items.forEach(r=>{
+        total += Number(r.stars)||0;
+        const when = r.created?.toDate ? r.created.toDate().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}) : "";
+        const card=document.createElement("div"); card.className="rv-card";
+        card.innerHTML=`<div class="rv-quote"><i class="fa-solid fa-quote-left"></i></div>
+          <div class="rv-stars">${starStr(r.stars)}</div>
+          <p class="rv-text">"${esc(r.text)}"</p>
+          <div class="rv-name">${esc(r.name)}</div>
+          <div class="rv-date">${when}</div>`;
+        track.appendChild(card);
+        const b=document.createElement("button");
+        b.addEventListener("click",()=>{ goTo([...dots.children].indexOf(b)); startAuto(); });
+        dots.appendChild(b);
+      });
+      const avg=total/count;
+      $("rvAvg").textContent=avg.toFixed(1);
+      $("rvAvgStars").textContent=starStr(Math.round(avg));
+      $("rvCount").textContent=count+(count===1?" review":" reviews");
+      $("rvSummary").hidden=false;
+      goTo(0); startAuto();
+    }
+
+    $("rvNext").addEventListener("click",()=>{ next(); startAuto(); });
+    $("rvPrev").addEventListener("click",()=>{ goTo(idx-1); startAuto(); });
+
+    const vp=document.querySelector(".rv-viewport"); let sx=null;
+    vp.addEventListener("touchstart",e=>{ sx=e.touches[0].clientX; stopAuto(); },{passive:true});
+    vp.addEventListener("touchend",e=>{ if(sx===null)return; const dx=e.changedTouches[0].clientX-sx;
+      if(Math.abs(dx)>40){ dx<0?next():goTo(idx-1); } sx=null; startAuto(); },{passive:true});
+
+    let rating=0;
+    const stars=[...$("rvStarsInput").querySelectorAll("i")];
+    const paint=n=>stars.forEach((s,i)=>s.classList.toggle("on",i<n));
+    stars.forEach((s,i)=>{ s.addEventListener("mouseenter",()=>paint(i+1));
+      s.addEventListener("click",()=>{ rating=i+1; paint(rating); }); });
+    $("rvStarsInput").addEventListener("mouseleave",()=>paint(rating));
+
+    $("rvForm").addEventListener("submit", async e=>{
+      e.preventDefault();
+      const name=$("rvName").value.trim(), text=$("rvText").value.trim(), msg=$("rvMsg");
+      const show=(t,ok)=>{ msg.hidden=false; msg.textContent=t; msg.className="rv-msg "+(ok?"ok":"err"); };
+      if(!rating) return show("Please tap a star rating.",false);
+      if(!name||!text) return show("Please add your name and your review.",false);
+      show("Sending…",true);
+      try{
+        await addDoc(collection(db,"reviews"),{ name:name.slice(0,60), stars:rating, text:text.slice(0,1000), created:serverTimestamp() });
+        show("Thank you! Your review has been added. 🌟",true);
+        $("rvForm").reset(); rating=0; paint(0);
+        setTimeout(load,1400);
+      }catch(err){ console.error(err); show("Something went wrong. Please try again.",false); }
+    });
+
+    load();
+  </script>
+
   <!-- ================= APP DOWNLOAD ================= -->
   <section class="section appdl" id="app">
     <div class="wrap inner reveal">
